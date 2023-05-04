@@ -21,7 +21,7 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response): Promise<any> => {
-    let { name, phone, password } = req.body;
+    let { firstName, lastName, email, phone, password } = req.body;
 
     const phoneInUse = await User.findOne({ phone });
 
@@ -32,10 +32,11 @@ router.post(
 
     password = await PasswordManager.toHash(password);
     const user = User.build({
-      name,
+      firstName,
+      lastName,
+      email,
       phone,
       password,
-      amount: 0,
     });
 
     await user.save();
