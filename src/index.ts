@@ -1,5 +1,6 @@
 import { app } from "./app";
 import mongoose from "mongoose";
+import { __PROD__ } from "./config/__prod__";
 
 const start = async function (): Promise<void> | never {
   if (!process.env.JWT_KEY) {
@@ -12,7 +13,9 @@ const start = async function (): Promise<void> | never {
   }
 
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(
+      __PROD__ ? process.env.MONGO_URI : "mongodb://127.0.0.1:27017/cefs1"
+    )
     .then(() => console.log("Connected to Database!"))
     .catch((err) => console.log(err));
 };

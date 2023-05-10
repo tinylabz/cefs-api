@@ -6,8 +6,7 @@ const router = express.Router();
 
 router.post("/", requireAuth, (req: Request, res: Response) => {
   (req.session as any) = null;
-  return res.send({ message: "user session destroyed" });
+  return res.send({ message: "Session destroyed" });
 });
 
 export { router as signoutRouter };
-

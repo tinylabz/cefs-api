@@ -1,12 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import { BadRequestError } from '../errors';
-import { verifyToken } from '../services/token';
-
-export interface UserPayload {
-  id: string;
-  phone: string;
-}
+import { UnauthorizedError } from "../errors";
+import { verifyToken } from "../services/token";
+import jwt from "jsonwebtoken";
+import { UserPayload } from "../Interfaces/types";
 
 declare global {
   namespace Express {
@@ -15,35 +12,35 @@ declare global {
     }
   }
 }
-declare module 'express-session' {
-  interface SessionData {
-    jwt?: string;
-  }
-}
 
 export const requireAuth = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const bearer = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!bearer || !bearer.startsWith('Bearer ')) {
-    return next(new BadRequestError('Unauthorised!!!'));
+  if (!authHeader) {
+    return res
+      .status(401)
+      .send({ message: new UnauthorizedError("Not authorized") });
   }
 
-  const token: string = bearer.split('Bearer ')[1].trim();
+  const [bearer, token] = authHeader.split(" ");
 
-  if (!token) {
-    throw new BadRequestError('Not authorized');
+  if (bearer !== "Bearer" || !token) {
+    return res
+      .status(401)
+      .send({ message: new UnauthorizedError("Not authorized") });
   }
 
   try {
-    const payload = (await verifyToken(token)) as unknown as UserPayload;
+    const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
     req.user = payload;
+    next();
   } catch (err) {
-    throw new BadRequestError('Not authorized');
+    return res
+      .status(401)
+      .send({ message: new UnauthorizedError("Not authorized") });
   }
-
-  next();
 };

@@ -1,15 +1,15 @@
-import { CustomError, ErrorField } from './custom-error';
+import { CustomError, ErrorField } from "./custom-error";
 
-export class NotAuthorizedError extends CustomError {
-	statusCode = 403;
+export class UnauthorizedError extends CustomError {
+  statusCode = 401;
 
-	constructor(public message: string) {
-		super(message);
+  constructor(public message: string) {
+    super(message);
 
-		Object.setPrototypeOf(this, NotAuthorizedError.prototype);
-	}
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
+  }
 
-	serializeErrors(): ErrorField {
-		return { message: this.message };
-	}
+  serializeErrors(): ErrorField {
+    return { message: this.message };
+  }
 }

@@ -1,7 +1,10 @@
+import { DESIGNATIONS } from "./types";
+
 export interface IUser {
-	name: string
-	password: string
-	avatar: string
-	phones: string
-	role: string
+  name: string;
+  email: string;
+  avatar: string;
+  phone: string;
+  designation: DESIGNATIONS;
+  college: string;
 }

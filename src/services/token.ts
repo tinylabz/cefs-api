@@ -1,13 +1,21 @@
-import { Document } from "mongoose";
 import { IToken } from "../Interfaces/Token";
-import { IUser } from "../Interfaces/User";
+import { UserPayload } from "../Interfaces/types";
 import { __PROD__ } from "../config/__prod__";
 import jwt from "jsonwebtoken";
 
-export const createToken = (user: Document<IUser>): string => {
-  return jwt.sign({ id: user._id }, process.env.JWT_KEY as jwt.Secret, {
-    expiresIn: __PROD__ ? "1d" : "4d",
-  });
+export const createToken = (user: UserPayload): string => {
+  return jwt.sign(
+    {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      designation: user.designation,
+    },
+    process.env.JWT_KEY as jwt.Secret,
+    {
+      expiresIn: __PROD__ ? "1d" : "4d",
+    }
+  );
 };
 
 export const verifyToken = async (

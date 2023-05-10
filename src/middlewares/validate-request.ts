@@ -1,13 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from "express";
+import { ReqValidationError } from "../errors/request-validation-error";
+import { validationResult } from "express-validator";
 
-export const validateRequest = (req:Request,res:Response,next:NextFunction) => {
-    const errors = validationResult(req);
+export const validateRequest = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
 
-    if(!errors.isEmpty()) {
-        throw new RequestValidationError(errors.array())
-    }
+  if (!errors.isEmpty()) {
+    throw new ReqValidationError(errors.array());
+  }
 
-    next();
-}
+  next();
+};
