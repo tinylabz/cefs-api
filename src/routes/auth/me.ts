@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
 
 import { requireAuth } from "../../middlewares/require-auth";
-import { DESIGNATIONS } from "../../Interfaces/types";
+import { DESIGNATIONS } from "../../Interfaces";
 import { Student } from "../../models/Student";
 import { Staff } from "../../models/Staff";
+import { debug } from "../../utils/debug";
 
 const router = Router().get(
   "/",
@@ -18,10 +19,10 @@ const router = Router().get(
         me = await Staff.findById(req.user?._id);
       }
     } catch (error) {
-      console.log("ERROR: ", error);
+      debug("ERROR: ", error);
     }
 
-    console.log("ME: ", JSON.stringify(me));
+    debug("ME: ", JSON.stringify(me));
 
     return res.status(200).send({ me });
   }

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
 import { UnauthorizedError } from "../errors";
-import { verifyToken } from "../services/token";
 import jwt from "jsonwebtoken";
-import { UserPayload } from "../Interfaces/types";
+import { UserPayload } from "../Interfaces";
+import { debug } from "../utils/debug";
 
 declare global {
   namespace Express {
@@ -37,8 +37,10 @@ export const requireAuth = async (
   try {
     const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
     req.user = payload;
-    next();
+    debug("AUTHORISED");
+    return next();
   } catch (err) {
+    debug("NOT AUTHORISED");
     return res
       .status(401)
       .send({ message: new UnauthorizedError("Not authorized") });

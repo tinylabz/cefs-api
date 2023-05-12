@@ -1,44 +1,42 @@
 import "dotenv/config";
-import "express-async-errors";
 
 import express, { Express, Request, Response } from "express";
+import "express-async-errors";
 
 import { NotFoundError } from "./errors";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { errorHandler, limiter as rateLimiter } from "./middlewares";
-import { registerStudentRouter } from "./routes/auth/register-student";
-import { registerStaffRouter } from "./routes/auth/register-staff";
-import { studentSigninRouter } from "./routes/auth/signin-student";
-import { staffSigninRouter } from "./routes/auth/signin-staff";
 import { signoutRouter } from "./routes/auth/signout";
 import { currentUserRouter } from "./routes/auth/me";
-import { newComplaintRouter } from "./routes/complaints/new";
-import { listComplaintRouter } from "./routes/complaints/list";
+import { complaintsRouter } from "./routes/complaints";
 import { pingRouter } from "./routes/ping";
+import { errorRouter } from "./routes/500";
+import { uploadRouter } from "./routes/upload";
+import { staffRouter } from "./routes/staff";
+import { studentRouter } from "./routes/student";
 
 const app: Express = express();
 
-const apiPrefixEndPoint = "/api";
-
+const apiPrfxEP = "/api";
 app.use(rateLimiter);
 app.disable("X-Powered-By");
 app.use(cors());
 app.use(helmet());
 app.use(morgan("combined"));
 app.use(express.json());
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(`${apiPrefixEndPoint}/auth/student/register`, registerStudentRouter);
-app.use(`${apiPrefixEndPoint}/auth/staff/register`, registerStaffRouter);
-app.use(`${apiPrefixEndPoint}/auth/student/signin`, studentSigninRouter);
-app.use(`${apiPrefixEndPoint}/auth/staff/signin`, staffSigninRouter);
-app.use(`${apiPrefixEndPoint}/auth/signout`, signoutRouter);
-app.use(`${apiPrefixEndPoint}/auth/me`, currentUserRouter);
-app.use(`${apiPrefixEndPoint}/complaints/new`, newComplaintRouter);
-app.use(`${apiPrefixEndPoint}/complaints/list`, listComplaintRouter);
-app.use(`${apiPrefixEndPoint}/ping`, pingRouter);
+app.use(`${apiPrfxEP}/staff/`, staffRouter);
+app.use(`${apiPrfxEP}/students/`, studentRouter);
+app.use(`${apiPrfxEP}/signout`, signoutRouter);
+app.use(`${apiPrfxEP}/me`, currentUserRouter);
+app.use(`${apiPrfxEP}/complaints`, complaintsRouter);
+app.use(`${apiPrfxEP}/upload`, uploadRouter);
+app.use(`${apiPrfxEP}/ping`, pingRouter);
+app.use(`${apiPrfxEP}/error`, errorRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   const error = new NotFoundError("Route not Found");

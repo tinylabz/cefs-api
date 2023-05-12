@@ -1,5 +1,5 @@
 import { getModelForClass, pre, prop, Severity } from "@typegoose/typegoose";
-import { DESIGNATIONS } from "../Interfaces/types";
+import { DESIGNATIONS } from "../Interfaces";
 import { PasswordVault } from "../services/password";
 
 @pre<StaffSchema>("save", async function (next) {
@@ -25,7 +25,7 @@ export class StaffSchema {
   @prop({ required: true, type: String, trim: true, length: 50 })
   college!: string;
 
-  @prop({ required: true, type: String, trim: true, length: 50})
+  @prop({ required: true, type: String, trim: true, length: 50 })
   school!: string;
 
   @prop({
@@ -43,10 +43,7 @@ export class StaffSchema {
 export const Staff = getModelForClass(StaffSchema, {
   schemaOptions: {
     timestamps: true,
-    virtuals: true,
     toJSON: {
-      virtuals: true,
-      getters: true,
       transform(_doc, ret): void {
         delete ret.password;
         delete ret.__v;

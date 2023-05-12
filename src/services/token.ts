@@ -1,5 +1,4 @@
-import { IToken } from "../Interfaces/Token";
-import { UserPayload } from "../Interfaces/types";
+import { UserPayload } from "../Interfaces";
 import { __PROD__ } from "../config/__prod__";
 import jwt from "jsonwebtoken";
 
@@ -17,17 +16,4 @@ export const createToken = (user: UserPayload): string => {
     }
   );
 };
-
-export const verifyToken = async (
-  token: string
-): Promise<jwt.VerifyErrors | IToken> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_KEY as jwt.Secret, (err, payload) => {
-      if (err) reject(err);
-
-      resolve(payload as IToken);
-    });
-  });
-};
-
-export default { createToken, verifyToken };
+export default { createToken };

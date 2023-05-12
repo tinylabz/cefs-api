@@ -1,6 +1,18 @@
-import { CustomError, ErrorField } from "./custom-error";
-
 import { ValidationError } from "express-validator";
+import { CustomError, ErrorField } from "./error";
+
+export class BadRequestError extends CustomError {
+  statusCode = 400;
+  constructor(public message: string) {
+    super(message);
+
+    Object.setPrototypeOf(this, BadRequestError.prototype);
+  }
+
+  serializeErrors(): ErrorField {
+    return { message: this.message };
+  }
+}
 
 export class ReqValidationError extends CustomError {
   statusCode = 400;

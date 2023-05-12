@@ -1,14 +1,9 @@
 import { Types } from "mongoose";
 
-export enum ComplaintType {
+export enum NATURE {
   MISSING_MARK = "MISSING_MARKS",
   REMARK = "REMARK",
   WRONG_ACADEMIC_YEAR = "WRONG_ACADEMIC_YEAR",
-}
-
-export enum USER_TYPE {
-  STUDENT = "STUDENT",
-  STAFF = "STAFF",
 }
 
 export enum DESIGNATIONS {
@@ -18,10 +13,23 @@ export enum DESIGNATIONS {
   HOD = "HOD",
 }
 
-export enum Gender {
+export enum GENDER {
   MALE = "MALE",
   FEMALE = "FEMALE",
 }
+
+export enum SEMESTER {
+  ONE = "ONE",
+  TWO = "TWO",
+  THREE = "THREE",
+}
+
+export enum COMPLAINT_STATUSES {
+  SUBMITTED = "SUBMITTED",
+  PENDING = "PENDING",
+  RESOLVED = "RESOLVED",
+}
+
 export interface UserPayload {
   _id: Types.ObjectId;
   name: string;
