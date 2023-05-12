@@ -45,7 +45,7 @@ router.post("/create", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/list", async (_req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const complaints = await Complaint.find({});
     return res.status(200).send({ complaints });
