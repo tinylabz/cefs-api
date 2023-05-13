@@ -18,31 +18,28 @@ export const requireAuth = async (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers["authorization"];
+
+  const error = new UnauthorizedError("Unauthorized!");
 
   if (!authHeader) {
-    return res
-      .status(401)
-      .send({ message: new UnauthorizedError("Not authorized") });
+    return res.status(error.statusCode).send({ error: error.message });
   }
 
   const [bearer, token] = authHeader.split(" ");
 
   if (bearer !== "Bearer" || !token) {
-    return res
-      .status(401)
-      .send({ message: new UnauthorizedError("Not authorized") });
+    return res.status(error.statusCode).send({ error: error.message });
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
-    req.user = payload;
+    const decoded = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
+    req.user = decoded;
     debug("AUTHORISED");
     return next();
   } catch (err) {
     debug("NOT AUTHORISED");
-    return res
-      .status(401)
-      .send({ message: new UnauthorizedError("Not authorized") });
+    const error = new UnauthorizedError((err as Error).message);
+    return res.status(error.statusCode).send({ error: error.message });
   }
 };

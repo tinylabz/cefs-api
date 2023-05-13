@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import express, { Express, Request, Response } from "express";
-import "express-async-errors";
 
 import { NotFoundError } from "./errors";
 import cors from "cors";
@@ -31,16 +30,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(`${apiPrfxEP}/staff/`, staffRouter);
 app.use(`${apiPrfxEP}/students/`, studentRouter);
+app.use(`${apiPrfxEP}/complaints`, complaintsRouter);
 app.use(`${apiPrfxEP}/signout`, signoutRouter);
 app.use(`${apiPrfxEP}/me`, currentUserRouter);
-app.use(`${apiPrfxEP}/complaints`, complaintsRouter);
 app.use(`${apiPrfxEP}/upload`, uploadRouter);
 app.use(`${apiPrfxEP}/ping`, pingRouter);
 app.use(`${apiPrfxEP}/error`, errorRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   const error = new NotFoundError("Route not Found");
-  return res.status(error.statusCode).send(error.serializeErrors());
+  return res.status(error.statusCode).send(error.message);
 });
 
 app.use(errorHandler);

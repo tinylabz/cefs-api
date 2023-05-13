@@ -8,10 +8,6 @@ export class InternalServerError extends CustomError {
 
     Object.setPrototypeOf(this, InternalServerError.prototype);
   }
-
-  serializeErrors(): ErrorField {
-    return { message: this.message };
-  }
 }
 
 export class DBConnError extends CustomError {
@@ -21,9 +17,5 @@ export class DBConnError extends CustomError {
     super(message);
 
     Object.setPrototypeOf(this, DBConnError.prototype);
-  }
-
-  serializeErrors(): ErrorField {
-    return { message: this.message };
   }
 }

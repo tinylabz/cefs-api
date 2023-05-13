@@ -1,10 +1,11 @@
 import { Router, Request, Response } from "express";
 
-import { requireAuth } from "../../middlewares/require-auth";
 import { DESIGNATIONS } from "../../Interfaces";
 import { Student } from "../../models/Student";
 import { Staff } from "../../models/Staff";
 import { debug } from "../../utils/debug";
+import { InternalServerError } from "../../errors";
+import { requireAuth } from "../../middlewares";
 
 const router = Router().get(
   "/",
@@ -19,6 +20,8 @@ const router = Router().get(
         me = await Staff.findById(req.user?._id);
       }
     } catch (error) {
+      const err = new InternalServerError((error as Error).message);
+      return res.status(err.statusCode).send({ error: err.message });
       debug("ERROR: ", error);
     }
 

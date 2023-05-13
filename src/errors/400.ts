@@ -8,10 +8,6 @@ export class BadRequestError extends CustomError {
 
     Object.setPrototypeOf(this, BadRequestError.prototype);
   }
-
-  serializeErrors(): ErrorField {
-    return { message: this.message };
-  }
 }
 
 export class ReqValidationError extends CustomError {
@@ -21,11 +17,5 @@ export class ReqValidationError extends CustomError {
     super("Invalid Request Parameters");
 
     Object.setPrototypeOf(this, ReqValidationError.prototype);
-  }
-
-  serializeErrors(): ErrorField[] {
-    return this.errors.map((error) => {
-      return { message: error.msg, field: error.param };
-    });
   }
 }

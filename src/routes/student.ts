@@ -6,6 +6,7 @@ import { createToken } from "../services/token";
 import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { PasswordVault } from "../services/password";
+import { validateObjectID } from "../middlewares/validate-objectid";
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
 
     if (!student) {
       const error = new BadRequestError("Invalid credentials");
-      return res.status(error.statusCode).send(error.serializeErrors());
+      return res.status(error.statusCode).send(error.message);
     }
 
     const passwordsDoMatch = await PasswordVault.compare(
@@ -26,7 +27,7 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
 
     if (!passwordsDoMatch) {
       const error = new BadRequestError("Invalid credentials");
-      return res.status(error.statusCode).send(error.serializeErrors());
+      return res.status(error.statusCode).send(error.message);
     }
 
     const token = createToken({
@@ -41,6 +42,7 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
     return res.status(200).send({ user: student, token });
   } catch (error) {
     const err = new InternalServerError((error as Error).message);
+    debug(error);
     return res.status(200).send({ error: err.message });
   }
 });
@@ -61,7 +63,7 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
 
     if (phoneInUse) {
       const error = new BadRequestError("Phone already in use");
-      return res.status(error.statusCode).send(error.serializeErrors());
+      return res.status(error.statusCode).send(error.message);
     }
 
     const student = await Student.create({
@@ -113,19 +115,23 @@ router.get("/", async (req: Request, res: Response): Promise<Response> => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const student = await Student.findById(req.params.id);
-    if (!student) {
-      const err = new NotFoundError("No such student found!");
-      return res.status(err.statusCode).send({ error: err.message });
+router.get(
+  "/:id",
+  validateObjectID,
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const student = await Student.findById(req.params.id);
+      if (!student) {
+        const err = new NotFoundError("No such student found!");
+        return res.status(err.statusCode).send({ error: err.message });
+      }
+      return res.status(200).send(student);
+    } catch (error) {
+      const err = new InternalServerError((error as Error).message);
+      debug(error);
+      return res.status(500).send({ error: err.message });
     }
-    return res.status(200).send(student);
-  } catch (error) {
-    const err = new InternalServerError((error as Error).message);
-    debug(error);
-    return res.status(500).send({ error: err.message });
   }
-});
+);
 
 export { router as studentRouter };
