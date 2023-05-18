@@ -7,6 +7,7 @@ import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { PasswordVault } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
+import { mail } from "../utils/mailer";
 
 const router = Router();
 
@@ -43,7 +44,7 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
   } catch (error) {
     const err = new InternalServerError((error as Error).message);
     debug(error);
-    return res.status(200).send({ error: err.message });
+    return res.status(err.statusCode).send({ error: err.message });
   }
 });
 
@@ -77,11 +78,8 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
       designation: DESIGNATIONS.STUDENT,
     });
 
-    try {
-      student.save();
-    } catch (error) {
-      debug("ERROR: ", error);
-    }
+    await mail(email);
+    await student.save();
 
     const token = createToken({
       _id: student._id,
@@ -96,7 +94,7 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
     return res.status(201).send({ user: student, token });
   } catch (error) {
     const err = new InternalServerError((error as Error).message);
-    return res.status(200).send({ error: err.message });
+    return res.status(err.statusCode).send({ error: err.message });
   }
 });
 
@@ -111,7 +109,7 @@ router.get("/", async (req: Request, res: Response): Promise<Response> => {
   } catch (error) {
     const err = new InternalServerError((error as Error).message);
     debug(error);
-    return res.status(500).send({ error: err.message });
+    return res.status(err.statusCode).send({ error: err.message });
   }
 });
 
@@ -129,7 +127,7 @@ router.get(
     } catch (error) {
       const err = new InternalServerError((error as Error).message);
       debug(error);
-      return res.status(500).send({ error: err.message });
+      return res.status(err.statusCode).send({ error: err.message });
     }
   }
 );

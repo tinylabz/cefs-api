@@ -87,7 +87,6 @@ export const Complaint = getModelForClass(ComplaintSchema, {
     timestamps: true,
     toJSON: {
       transform(_doc, ret): void {
-        delete ret.password;
         delete ret.__v;
       },
     },

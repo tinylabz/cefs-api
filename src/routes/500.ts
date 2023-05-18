@@ -1,7 +1,9 @@
 import { Request, Response, Router } from "express";
+import { InternalServerError } from "../errors";
 
 const router = Router().get("/", async (req: Request, res: Response) => {
-  throw new Error("Intended Exception!");
+  
+  throw new InternalServerError("Intended Exception")
 });
 
 export { router as errorRouter };

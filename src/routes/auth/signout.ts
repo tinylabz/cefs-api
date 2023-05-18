@@ -5,7 +5,6 @@ import { requireAuth } from "../../middlewares/require-auth";
 const router = express.Router();
 
 router.patch("/", requireAuth, (req: Request, res: Response) => {
-  (req.session as any) = null;
 
   return res.send({ message: "Session destroyed" });
 });

@@ -2,7 +2,7 @@ import express, { Response, Request } from "express";
 
 import { Complaint } from "../models/Complaint";
 import { debug } from "../utils/debug";
-import { InternalServerError } from "../errors";
+import { BadRequestError, InternalServerError } from "../errors";
 import { COMPLAINT_STATUSES } from "../Interfaces";
 import { validateObjectID } from "../middlewares/validate-objectid";
 
@@ -21,6 +21,7 @@ router.post("/", async (req: Request, res: Response) => {
     recieptURL,
     correctAcademicYear,
     nature,
+    status,
   } = req.body;
 
   try {
@@ -36,12 +37,13 @@ router.post("/", async (req: Request, res: Response) => {
       academicYearAllocated,
       correctAcademicYear,
       nature,
+      status,
     });
     await complaint.save();
     return res.status(200).send({ complaint });
   } catch (error) {
     debug(error);
-    const err = new InternalServerError((error as Error).message);
+    const err = new BadRequestError((error as Error).message);
     return res.status(err.statusCode).send({ message: err.message });
   }
 });

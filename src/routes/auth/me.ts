@@ -21,8 +21,8 @@ const router = Router().get(
       }
     } catch (error) {
       const err = new InternalServerError((error as Error).message);
+      debug("ERROR: ", err);
       return res.status(err.statusCode).send({ error: err.message });
-      debug("ERROR: ", error);
     }
 
     debug("ME: ", JSON.stringify(me));

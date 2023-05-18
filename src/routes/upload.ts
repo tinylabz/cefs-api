@@ -8,7 +8,7 @@ const router = Router().get("/", async (req: Request, res: Response) => {
 });
 
 router.post(
-  "/profile",
+  "/",
   requireAuth,
   multer({
     storage: multer.diskStorage({
@@ -18,7 +18,7 @@ router.post(
         callback(null, file.originalname);
       },
     }),
-  }).single("avatar"),
+  }).single("file"),
   (req, res, _next) => {
     debug("HERE");
     return res.status(200).send({ file: req.file, text: req.body });

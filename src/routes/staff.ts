@@ -9,6 +9,7 @@ import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { PasswordVault } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
+import { mail } from "../utils/mailer";
 
 const router = Router();
 
@@ -92,6 +93,7 @@ router.post(
         password,
       });
 
+      await mail(email);
       await staff.save();
 
       const token = createToken({

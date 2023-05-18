@@ -22,6 +22,9 @@ export class StaffSchema {
   @prop({ required: true, type: String, trim: true, unique: true })
   email!: string;
 
+  @prop({ required: false, default: false, type: Boolean })
+  isEmailVerified!: boolean;
+
   @prop({ required: true, type: String, trim: true, length: 50 })
   college!: string;
 

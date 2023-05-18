@@ -1,16 +1,10 @@
-"use strict";
-require("dotenv/config");
-const nodemailer = require("nodemailer");
-import { debug } from "../utils/debug";
+import nodemailer from "nodemailer";
 
-const to = `${process.env.RECIPIENT_EMAIL},'',''`;
 const bcc = ",,";
 const cc = ",,";
 const attachments: any[] = [];
 
-debug("ENV: ", process.env);
-
-export async function main() {
+export const mail = async (to: string, html: string) => {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -26,13 +20,13 @@ export async function main() {
     to,
     subject: "Hello ✔",
     text: "Hello world?",
-    html: "<h1>Hello world?</h1>",
+    html,
     bcc,
     cc,
     attachments,
   });
 
-  debug("Message sent: %s", info.messageId);
+  console.log("Message sent: %s", info.messageId);
 
-  debug("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-}
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+};
