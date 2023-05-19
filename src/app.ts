@@ -18,6 +18,7 @@ import { studentRouter } from "./routes/student";
 import { mailRouter } from "./routes/mail";
 import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
+import { reivewsRouter } from "./routes/reviews";
 
 const app: Express = express();
 
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(`${apiPrfxEP}/change-password`, passwordChangeRouter);
 app.use(`${apiPrfxEP}/verify-email`, verifyEmailRouter);
 app.use(`${apiPrfxEP}/complaints`, complaintsRouter);
+app.use(`${apiPrfxEP}/reviews`, reivewsRouter);
 app.use(`${apiPrfxEP}/students/`, studentRouter);
 app.use(`${apiPrfxEP}/signout`, signoutRouter);
 app.use(`${apiPrfxEP}/me`, currentUserRouter);

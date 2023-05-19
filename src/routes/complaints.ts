@@ -43,8 +43,8 @@ router.post("/", async (req: Request, res: Response) => {
     return res.status(200).send({ complaint });
   } catch (error) {
     debug(error);
-    const err = new BadRequestError((error as Error).message);
-    return res.status(err.statusCode).send({ message: err.message });
+
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -54,8 +54,7 @@ router.get("/", async (_req: Request, res: Response) => {
     return res.status(200).send({ complaints });
   } catch (error) {
     debug(error);
-    const err = new InternalServerError((error as Error).message);
-    return res.status(err.statusCode).send({ message: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -65,8 +64,7 @@ router.get("/:id", validateObjectID, async (req: Request, res: Response) => {
     return res.status(200).send({ complaint });
   } catch (error) {
     debug(error);
-    const err = new InternalServerError((error as Error).message);
-    return res.status(err.statusCode).send({ message: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -76,8 +74,7 @@ router.delete("/:id", validateObjectID, async (req: Request, res: Response) => {
     return res.status(200).send({ complaint });
   } catch (error) {
     debug(error);
-    const err = new InternalServerError((error as Error).message);
-    return res.status(err.statusCode).send({ message: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -96,8 +93,7 @@ router.patch(
       return res.status(200).send({ complaint });
     } catch (error) {
       debug(error);
-      const err = new InternalServerError((error as Error).message);
-      return res.status(err.statusCode).send({ message: err.message });
+      return res.status(500).send((error as Error).message);
     }
   }
 );
@@ -108,8 +104,7 @@ router.delete("/", async (_req: Request, res: Response) => {
     return res.status(200).send({ complaints });
   } catch (error) {
     debug(error);
-    const err = new InternalServerError((error as Error).message);
-    return res.status(err.statusCode).send({ message: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 

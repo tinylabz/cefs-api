@@ -6,9 +6,13 @@ import { PasswordVault } from "../services/password";
   if (!this.isModified("password")) {
     return next();
   }
+  console.log("PASSWORD: ", this.password);
   try {
+    console.log("PASSWORD: ", this.password);
     const hashedPassword = await PasswordVault.toHash(this.password);
     this.password = hashedPassword;
+
+    console.log("PASSWORD HASHED: ", this.password);
     next();
   } catch (error: any) {
     return next(error);
@@ -53,9 +57,6 @@ export class StudentSchema {
 
   @prop({ required: true, type: String })
   password!: string;
-
-  @prop({ required: false, enum: GENDER, default: GENDER.FEMALE })
-  gender!: string;
 }
 
 export const Student = getModelForClass(StudentSchema, {

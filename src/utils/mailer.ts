@@ -4,7 +4,12 @@ const bcc = ",,";
 const cc = ",,";
 const attachments: any[] = [];
 
-export const mail = async (to: string, html: string) => {
+export const mail = async (
+  to: string,
+  html: string,
+  subject: string,
+  text: string
+) => {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -16,10 +21,10 @@ export const mail = async (to: string, html: string) => {
   });
 
   let info = await transporter.sendMail({
-    from: `"GHOST 👻" ${process.env.SENDER_EMAIL}`,
+    from: `"FROM CEFS 👻" ${process.env.SENDER_EMAIL}`,
     to,
-    subject: "Hello ✔",
-    text: "Hello world?",
+    subject,
+    text,
     html,
     bcc,
     cc,

@@ -7,22 +7,21 @@ import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { PasswordVault } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
-import { mail } from "../utils/mailer";
 
 const router = Router();
 
 router.post("/signin", async (req: Request, res: Response): Promise<any> => {
   const { studentNumber, password } = req.body;
   try {
-    const student = await Student.findOne({ studentNumber });
+    const user = await Student.findOne({ studentNumber });
 
-    if (!student) {
+    if (!user) {
       const error = new BadRequestError("Invalid credentials");
       return res.status(error.statusCode).send(error.message);
     }
 
     const passwordsDoMatch = await PasswordVault.compare(
-      student.password,
+      user.password,
       password
     );
 
@@ -32,19 +31,18 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
     }
 
     const token = createToken({
-      _id: student._id,
+      _id: user._id,
       designation: DESIGNATIONS.STUDENT,
-      email: student.email,
-      name: student.name,
+      email: user.email,
+      name: user.name,
     });
     debug(token);
-    debug(student);
+    debug(user);
 
-    return res.status(200).send({ user: student, token });
+    return res.status(200).send({ user, token });
   } catch (error) {
-    const err = new InternalServerError((error as Error).message);
     debug(error);
-    return res.status(err.statusCode).send({ error: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -60,16 +58,16 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
   } = req.body;
 
   try {
-    const phoneInUse = await Student.findOne({ phone });
+    let user = await Student.findOne({ email });
 
-    if (phoneInUse) {
-      const error = new BadRequestError("Phone already in use");
+    if (user) {
+      const error = new BadRequestError("Email Already in use");
       return res.status(error.statusCode).send(error.message);
     }
 
-    const student = await Student.create({
-      college,
+    user = await Student.create({
       name,
+      college,
       registrationNumber,
       studentNumber,
       email,
@@ -78,23 +76,21 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
       designation: DESIGNATIONS.STUDENT,
     });
 
-    await mail(email);
-    await student.save();
+    await user.save();
 
     const token = createToken({
-      _id: student._id,
-      designation: student.designation as DESIGNATIONS,
-      email: student.email,
-      name: student.name,
+      _id: user._id,
+      designation: user.designation as DESIGNATIONS,
+      email: user.email,
+      name: user.name,
     });
     debug("TOKEN: ", token);
 
-    debug("STUDENT: ", student);
+    debug("STUDENT: ", user);
 
-    return res.status(201).send({ user: student, token });
+    return res.status(201).send({ user, token });
   } catch (error) {
-    const err = new InternalServerError((error as Error).message);
-    return res.status(err.statusCode).send({ error: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -103,13 +99,12 @@ router.get("/", async (req: Request, res: Response): Promise<Response> => {
     const students = await Student.find({});
     if (students.length < 1) {
       const err = new NotFoundError("No students found!");
-      return res.status(err.statusCode).send({ error: err.message });
+      return res.status(err.statusCode).send(err.message);
     }
     return res.status(200).send({ students });
   } catch (error) {
-    const err = new InternalServerError((error as Error).message);
     debug(error);
-    return res.status(err.statusCode).send({ error: err.message });
+    return res.status(500).send((error as Error).message);
   }
 });
 
@@ -121,15 +116,24 @@ router.get(
       const student = await Student.findById(req.params.id);
       if (!student) {
         const err = new NotFoundError("No such student found!");
-        return res.status(err.statusCode).send({ error: err.message });
+        return res.status(err.statusCode).send(err.message);
       }
       return res.status(200).send(student);
     } catch (error) {
-      const err = new InternalServerError((error as Error).message);
       debug(error);
-      return res.status(err.statusCode).send({ error: err.message });
+      return res.status(500).send((error as Error).message);
     }
   }
 );
+
+router.delete("/", async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const deleted = await Student.deleteMany({});
+    return res.status(200).send({ deleted });
+  } catch (error) {
+    debug(error);
+    return res.status(500).send((error as Error).message);
+  }
+});
 
 export { router as studentRouter };

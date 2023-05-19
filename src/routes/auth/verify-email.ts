@@ -2,6 +2,7 @@ import { Router, Response, Request } from "express";
 import { Student } from "../../models/Student";
 import { debug } from "../../utils/debug";
 import { InternalServerError } from "../../errors";
+import { Staff } from "../../models/Staff";
 
 const router = Router();
 
@@ -23,13 +24,14 @@ router.get("/students/:id", async (req: Request, res: Response) => {
 
 router.get("/staff/:id", async (req: Request, res: Response) => {
   try {
-    const student = await Student.findByIdAndUpdate(
+    const staff = await Staff.findByIdAndUpdate(
       req.params.id,
       { isEmailVerified: true },
       { new: true }
     );
 
-    debug(student);
+    debug("Email verified :", staff);
+    return res.status(200).send({ message: "Email Verified" });
   } catch (error) {
     const err = new InternalServerError((error as Error).message);
     return res.status(err.statusCode).send({ error: err.message });

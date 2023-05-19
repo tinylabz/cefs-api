@@ -10,10 +10,10 @@ export const createToken = (user: UserPayload): string => {
       email: user.email,
       designation: user.designation,
     },
-    process.env.JWT_KEY as jwt.Secret,
-    {
-      expiresIn: __PROD__ ? "1d" : "4d",
-    }
+    process.env.JWT_KEY as jwt.Secret
+    // {
+    //   expiresIn: __PROD__ ? "1d" : "4d",
+    // }
   );
 };
 export default { createToken };
