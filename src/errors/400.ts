@@ -1,5 +1,5 @@
 import { ValidationError } from "express-validator";
-import { CustomError, ErrorField } from "./error";
+import { CustomError } from "./error";
 
 export class BadRequestError extends CustomError {
   statusCode = 400;

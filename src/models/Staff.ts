@@ -1,13 +1,13 @@
 import { getModelForClass, pre, prop, Severity } from "@typegoose/typegoose";
 import { DESIGNATIONS } from "../Interfaces";
-import { PasswordVault } from "../services/password";
+import { Passwd } from "../services/password";
 
 @pre<StaffSchema>("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
   try {
-    const hashedPassword = await PasswordVault.toHash(this.password);
+    const hashedPassword = await Passwd.toHash(this.password);
     this.password = hashedPassword;
 
     next();

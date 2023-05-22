@@ -4,11 +4,9 @@ import { BadRequestError } from "../errors";
 import mongoose from "mongoose";
 
 const validateObjectID = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  if (!req.params.id || !mongoose.isValidObjectId(req.params.id))
+    return next(new BadRequestError("Invalid objectId").message);
 
-  if (!mongoose.isValidObjectId(id)) {
-    next(new BadRequestError("Invalid objectId").message);
-  }
   next();
 };
 export { validateObjectID };

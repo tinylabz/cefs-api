@@ -1,11 +1,11 @@
 import crypto from "crypto";
 import util from "util";
 
-export class PasswordVault {
-  static async toHash(password: string): Promise<string> {
+export class Passwd {
+  static async toHash(passwd: string): Promise<string> {
     const salt = crypto.randomBytes(8).toString("hex");
     const buffer = (await util.promisify(crypto.scrypt)(
-      password,
+      passwd,
       salt,
       64
     )) as Buffer;
@@ -13,15 +13,15 @@ export class PasswordVault {
   }
 
   static async compare(
-    storedPassword: string,
-    suppliedPassword: string
+    storedPasswd: string,
+    suppliedPwd: string
   ): Promise<boolean> {
-    const [hashedPassword, salt] = storedPassword.split(".");
+    const [hashedPasswd, salt] = storedPasswd.split(".");
     const buffer = (await util.promisify(crypto.scrypt)(
-      suppliedPassword,
+      suppliedPwd,
       salt,
       64
     )) as Buffer;
-    return buffer.toString("hex") === hashedPassword;
+    return buffer.toString("hex") === hashedPasswd;
   }
 }

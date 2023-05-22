@@ -7,9 +7,9 @@ import { validateRequest } from "../middlewares";
 import { createToken } from "../services/token";
 import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
-import { PasswordVault } from "../services/password";
+import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
-import { mail } from "../utils/mailer";
+import { sendMail } from "../services/mail";
 
 const router = Router();
 
@@ -20,7 +20,7 @@ router.post(
     body("password").notEmpty().withMessage("You must supply a password"),
   ],
   validateRequest,
-  async (req: Request, res: Response): Promise<any> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const { email, password } = req.body;
 
     try {
@@ -31,10 +31,7 @@ router.post(
         return res.status(error.statusCode).send(error.message);
       }
 
-      const passwordsDoMatch = await PasswordVault.compare(
-        staff.password,
-        password
-      );
+      const passwordsDoMatch = await Passwd.compare(staff.password, password);
 
       if (!passwordsDoMatch) {
         const error = new BadRequestError("Invalid credentials");
@@ -55,7 +52,7 @@ router.post(
   }
 );
 
-router.post("/register", async (req: Request, res: Response): Promise<any> => {
+router.post("/register", async (req: Request, res: Response): Promise<Response> => {
   let { name, email, designation, password, college, school } = req.body;
 
   try {

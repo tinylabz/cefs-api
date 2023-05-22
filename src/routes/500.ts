@@ -2,8 +2,11 @@ import { Request, Response, Router } from "express";
 import { InternalServerError } from "../errors";
 
 const router = Router().get("/", async (req: Request, res: Response) => {
-  
-  throw new InternalServerError("Intended Exception")
+  try {
+    throw new InternalServerError("Intended Exception");
+  } catch (error: unknown) {
+    res.status(500).send((error as Error).message);
+  }
 });
 
 export { router as errorRouter };

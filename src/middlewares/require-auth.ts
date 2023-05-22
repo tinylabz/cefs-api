@@ -18,18 +18,16 @@ export const requireAuth = async (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers["authorization"];
+  const header = req.headers["authorization"];
 
   const error = new UnauthorizedError("Unauthorized!");
 
-  if (!authHeader) {
-    return res.status(error.statusCode).send({ error: error.message });
-  }
+  if (!header) return res.status(error.statusCode).send(error.message);
 
-  const [bearer, token] = authHeader.split(" ");
+  const [bearer, token] = header.split(" ");
 
   if (bearer !== "Bearer" || !token) {
-    return res.status(error.statusCode).send({ error: error.message });
+    return res.status(error.statusCode).send(error.message);
   }
 
   try {
@@ -40,6 +38,6 @@ export const requireAuth = async (
   } catch (err) {
     debug("NOT AUTHORISED");
     const error = new UnauthorizedError((err as Error).message);
-    return res.status(error.statusCode).send({ error: error.message });
+    return res.status(error.statusCode).send(error.message);
   }
 };

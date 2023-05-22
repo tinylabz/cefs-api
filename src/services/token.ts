@@ -11,9 +11,6 @@ export const createToken = (user: UserPayload): string => {
       designation: user.designation,
     },
     process.env.JWT_KEY as jwt.Secret
-    // {
-    //   expiresIn: __PROD__ ? "1d" : "4d",
-    // }
   );
 };
 export default { createToken };

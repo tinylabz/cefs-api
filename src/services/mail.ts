@@ -4,7 +4,7 @@ const bcc = ",,";
 const cc = ",,";
 const attachments: any[] = [];
 
-export const mail = async (
+export const sendMail = async (
   to: string,
   html: string,
   subject: string,

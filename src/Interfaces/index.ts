@@ -30,13 +30,9 @@ export enum COMPLAINT_STATUSES {
   RESOLVED = "RESOLVED",
 }
 
-export interface UserPayload {
+export type UserPayload = {
   _id: Types.ObjectId;
   name: string;
   email: string;
   designation: DESIGNATIONS;
-}
-
-export interface IToken extends UserPayload {
-  expiresIn: number;
-}
+};

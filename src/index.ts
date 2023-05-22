@@ -28,13 +28,13 @@ const start = async (): Promise<void | never> => {
 start();
 
 process.on("uncaughtException", (err) => {
-  debug((err as Error).message);
+  debug(err);
 });
 process.on("unhandledRejection", (err) => {
-  debug((err as Error).message);
+  debug(err);
 });
 process.on("uncaughtExceptionMonitor", (err) => {
-  debug((err as Error).message);
+  debug(err);
 });
 
 process.on("SIGINT", () => {

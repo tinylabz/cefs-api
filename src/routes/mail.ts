@@ -1,15 +1,19 @@
 import { Request, Response, Router } from "express";
-import { mail } from "../utils/mailer";
+import { sendMail } from "../services/mail";
 import { debug } from "../utils/debug";
 import { requireAuth } from "../middlewares";
+import { DESIGNATIONS } from "../Interfaces";
 
 const router = Router();
 
 router.get("/", requireAuth, async (req: Request, res: Response) => {
-  mail(
+  const entity =
+    req.user?.designation === DESIGNATIONS.STUDENT ? "students" : "staff";
+
+  sendMail(
     `${req.user?.email},'',''`,
     `<a
-      href="http://localhost:4000/api/verify-email/students/${req.user?._id}"
+      href="http://localhost:4000/api/verify-email/${entity}/${req.user?._id}"
       style="text-decoration: none;"
     >
       <button style="display: inline-block; cursor: pointer; font-size: 16px; font-weight: bold; text-align: center; text-decoration: none; border-radius: 4px; padding: 10px 20px; border: none; background-color: #4CAF50; color: white;">

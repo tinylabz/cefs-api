@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { requireAuth } from "../../middlewares";
 import { Student } from "../../models/Student";
-import { PasswordVault } from "../../services/password";
+import { Passwd } from "../../services/password";
 import { debug } from "../../utils/debug";
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.patch("/", requireAuth, async (req: Request, res: Response) => {
 
     if (newPassword !== confirmNewPassword)
       return res.status(400).send("Passwords don't match");
-    const hashedPwd = await PasswordVault.toHash(newPassword);
+    const hashedPwd = await Passwd.toHash(newPassword);
 
     let user = await Student.findByIdAndUpdate(
       req.user?._id,

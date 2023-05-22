@@ -19,6 +19,7 @@ import { mailRouter } from "./routes/mail";
 import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { reivewsRouter } from "./routes/reviews";
+import { xlsxRouter } from "./routes/xlxs";
 
 const app: Express = express();
 
@@ -44,6 +45,7 @@ app.use(`${apiPrfxEP}/staff/`, staffRouter);
 app.use(`${apiPrfxEP}/error`, errorRouter);
 app.use(`${apiPrfxEP}/ping`, pingRouter);
 app.use(`${apiPrfxEP}/mail`, mailRouter);
+app.use(`${apiPrfxEP}/parse`, xlsxRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   const error = new NotFoundError("Route not Found");

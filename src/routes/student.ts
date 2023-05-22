@@ -1,11 +1,11 @@
 import { Request, Response, Router } from "express";
 
-import { BadRequestError, InternalServerError, NotFoundError } from "../errors";
+import { BadRequestError, NotFoundError } from "../errors";
 import { Student } from "../models/Student";
 import { createToken } from "../services/token";
 import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
-import { PasswordVault } from "../services/password";
+import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
 
 const router = Router();
@@ -20,10 +20,7 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
       return res.status(error.statusCode).send(error.message);
     }
 
-    const passwordsDoMatch = await PasswordVault.compare(
-      user.password,
-      password
-    );
+    const passwordsDoMatch = await Passwd.compare(user.password, password);
 
     if (!passwordsDoMatch) {
       const error = new BadRequestError("Invalid credentials");
@@ -47,15 +44,8 @@ router.post("/signin", async (req: Request, res: Response): Promise<any> => {
 });
 
 router.post("/register", async (req: Request, res: Response): Promise<any> => {
-  let {
-    name,
-    registrationNumber,
-    studentNumber,
-    email,
-    phone,
-    college,
-    password,
-  } = req.body;
+  let { name, registrationNumber, studentNumber, email, college, password } =
+    req.body;
 
   try {
     let user = await Student.findOne({ email });
@@ -71,7 +61,6 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
       registrationNumber,
       studentNumber,
       email,
-      phone,
       password,
       designation: DESIGNATIONS.STUDENT,
     });
