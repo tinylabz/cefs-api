@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
-import path from "node:path";
 import {
   parser,
   searchAttendenceSheet,
@@ -8,7 +7,6 @@ import {
 } from "../services/xls-parser";
 import { debug } from "../utils/debug";
 import { requireAuth } from "../middlewares";
-import { readFile } from "node:fs/promises";
 
 const router = express.Router();
 
