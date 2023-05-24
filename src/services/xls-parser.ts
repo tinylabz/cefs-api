@@ -15,9 +15,9 @@ type Result = {
   exam: number;
   finalMark: number;
 } | null;
-
 type Sheet = unknown[];
 type Row = [number, string, number, string, number, number, number] | undefined;
+
 export const searchMarkSheet = (
   sheet: Sheet,
   studentNumber: number
@@ -37,21 +37,33 @@ export const searchMarkSheet = (
     : null;
 };
 
-export const searchAttendenceSheet = (
+type TestRow = [string, number, string] | undefined;
+
+export const searchTestsAttendenceSheet = (
   sheet: Sheet,
   studentNumber: number
-): Result => {
-  let desiredRow: Row;
+): boolean => {
+  let desiredRow: TestRow;
+
   if (studentNumber) {
     sheet.forEach((row: unknown) => {
-      if ((row as Row)![2] === studentNumber) desiredRow = row as Row;
+      if ((row as TestRow)![1] === studentNumber) desiredRow = row as TestRow;
     });
   }
-  return desiredRow
-    ? {
-        finalMark: desiredRow[4],
-        courseWork: desiredRow[5],
-        exam: desiredRow[6],
-      }
-    : null;
+  return desiredRow ? true : false;
+};
+
+type ExamRow = [string, number, string, number] | undefined;
+
+export const searchExamAttendenceSheet = (
+  sheet: Sheet,
+  studentNumber: number
+): boolean => {
+  let desiredRow: ExamRow;
+  if (studentNumber) {
+    sheet.forEach((row: unknown) => {
+      if ((row as ExamRow)![1] === studentNumber) desiredRow = row as ExamRow;
+    });
+  }
+  return desiredRow ? true : false;
 };

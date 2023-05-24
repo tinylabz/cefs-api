@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-
-import { UnauthorizedError } from "../errors";
 import jwt from "jsonwebtoken";
-import { UserPayload } from "../Interfaces";
-import { debug } from "../utils/debug";
+import { DESIGNATIONS, UserPayload } from "../Interfaces";
 
 declare global {
   namespace Express {
@@ -20,24 +17,53 @@ export const requireAuth = async (
 ) => {
   const header = req.headers["authorization"];
 
-  const error = new UnauthorizedError("Unauthorized!");
-
-  if (!header) return res.status(error.statusCode).send(error.message);
+  if (!header) return res.status(401).send("Missing Auth headers!");
 
   const [bearer, token] = header.split(" ");
 
   if (bearer !== "Bearer" || !token) {
-    return res.status(error.statusCode).send(error.message);
+    return res.status(401).send("Missing or Invalid token!");
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
     req.user = decoded;
-    debug("AUTHORISED");
+
     return next();
   } catch (err) {
-    debug("NOT AUTHORISED");
-    const error = new UnauthorizedError((err as Error).message);
-    return res.status(error.statusCode).send(error.message);
+    return res.status(401).send((err as Error).message);
   }
+};
+
+export const IsHod = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.designation !== DESIGNATIONS.HOD)
+    return res.status(403).send("This route is only accessible to HOD's");
+
+  next();
+};
+
+export const IsLecturer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.designation !== DESIGNATIONS.LECTURER)
+    return res.status(403).send(`This route is only accessible to lecturers`);
+
+  next();
+};
+
+export const isRegister = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.designation !== DESIGNATIONS.REGISTRAR)
+    return res.status(403).send(`This route is only accessible to registrars`);
+
+  next();
 };

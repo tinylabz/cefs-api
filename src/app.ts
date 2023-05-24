@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import express, { Express, Request, Response } from "express";
-
 import { NotFoundError } from "./errors";
 import cors from "cors";
 import helmet from "helmet";
@@ -19,7 +18,8 @@ import { mailRouter } from "./routes/mail";
 import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { reivewsRouter } from "./routes/reviews";
-import { xlsxRouter } from "./routes/xlxs";
+import { xlsRouter } from "./routes/xls";
+import { fileRouter } from "./routes/files";
 
 const app: Express = express();
 
@@ -45,11 +45,11 @@ app.use(`${apiPrfxEP}/staff/`, staffRouter);
 app.use(`${apiPrfxEP}/error`, errorRouter);
 app.use(`${apiPrfxEP}/ping`, pingRouter);
 app.use(`${apiPrfxEP}/mail`, mailRouter);
-app.use(`${apiPrfxEP}/parse`, xlsxRouter);
+app.use(`${apiPrfxEP}/parse`, xlsRouter);
+app.use(`${apiPrfxEP}/files`, fileRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
-  const error = new NotFoundError("Route not Found");
-  return res.status(error.statusCode).send(error.message);
+  return res.status(404).send("Route Not found!");
 });
 
 app.use(errorHandler);

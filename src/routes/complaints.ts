@@ -2,13 +2,13 @@ import express, { Response, Request } from "express";
 
 import { Complaint } from "../models/Complaint";
 import { debug } from "../utils/debug";
-import { BadRequestError, InternalServerError } from "../errors";
 import { COMPLAINT_STATUSES } from "../Interfaces";
 import { validateObjectID } from "../middlewares/validate-objectid";
+import { requireAuth } from "../middlewares";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAuth, async (req: Request, res: Response) => {
   const {
     studentNumber,
     registrationNumber,
@@ -38,6 +38,7 @@ router.post("/", async (req: Request, res: Response) => {
       correctAcademicYear,
       nature,
       status,
+      studentId: req.user?._id,
     });
     await complaint.save();
     return res.status(200).send({ complaint });

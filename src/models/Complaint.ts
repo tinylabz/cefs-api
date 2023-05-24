@@ -1,5 +1,7 @@
 import { getModelForClass, prop, Severity } from "@typegoose/typegoose";
 import { COMPLAINT_STATUSES, NATURE, SEMESTER } from "../Interfaces";
+import { Student } from "./Student";
+import mongoose from "mongoose";
 
 export class ComplaintSchema {
   @prop({ required: true, type: String, trim: true, length: 10 })
@@ -33,13 +35,9 @@ export class ComplaintSchema {
     required: true,
     type: String,
     trim: true,
-    enum: [
-      COMPLAINT_STATUSES.SUBMITTED,
-      COMPLAINT_STATUSES.PENDING,
-      COMPLAINT_STATUSES.RESOLVED,
-    ],
+    enum: [COMPLAINT_STATUSES.PENDING, COMPLAINT_STATUSES.RESOLVED],
     uppercase: true,
-    default: COMPLAINT_STATUSES.SUBMITTED,
+    default: COMPLAINT_STATUSES.PENDING,
   })
   status!: string;
 
@@ -80,6 +78,13 @@ export class ComplaintSchema {
 
   @prop({ required: false, type: String, default: undefined })
   correctAcademicYear!: string;
+
+  @prop({
+    required: true,
+    type: mongoose.Types.ObjectId,
+    ref: Student, // Reference the Student model or document
+  })
+  studentId!: string;
 }
 
 export const Complaint = getModelForClass(ComplaintSchema, {

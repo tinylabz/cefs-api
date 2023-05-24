@@ -8,9 +8,9 @@
   "scripts": {
     "postinstall": "tsc",
     "build": "tsc",
-    "start": "node ./build/index.js",
+    "start": "ts-node ./src/index.ts",
     "ts": "tsc -w",
-    "dev": "nodemon build/index.js"
+    "dev": "ts-node-dev ./src/index.ts"
   },
   "dependencies": {
     "@typegoose/typegoose": "^11.1.0",
@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.1",
+    "ts-node": "^10.9.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 
 export enum NATURE {
-  MISSING_MARK = "MISSING_MARKS",
+  MISSING_MARK = "MISSING MARKS",
   REMARK = "REMARK",
-  WRONG_ACADEMIC_YEAR = "WRONG_ACADEMIC_YEAR",
+  WRONG_ACADEMIC_YEAR = "WRONG ACADEMIC YEAR",
 }
 
 export enum DESIGNATIONS {
@@ -25,7 +25,6 @@ export enum SEMESTER {
 }
 
 export enum COMPLAINT_STATUSES {
-  SUBMITTED = "SUBMITTED",
   PENDING = "PENDING",
   RESOLVED = "RESOLVED",
 }

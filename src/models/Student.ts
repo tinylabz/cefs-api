@@ -25,10 +25,10 @@ export class StudentSchema {
   @prop({ required: false, default: false, type: Boolean })
   isEmailVerified!: boolean;
 
-  @prop({ required: true, type: String, trim: true, length: 10 })
+  @prop({ required: true, type: String, unique: true, trim: true, length: 10 })
   studentNumber!: string;
 
-  @prop({ required: true, type: String, trim: true, length: 15 })
+  @prop({ required: true, type: String, unique: true, trim: true, length: 15 })
   registrationNumber!: string;
 
   @prop({
