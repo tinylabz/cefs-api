@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import express, { Express, Request, Response } from "express";
-import { NotFoundError } from "./errors";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -19,7 +18,6 @@ import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { reivewsRouter } from "./routes/reviews";
 import { xlsRouter } from "./routes/xls";
-import { fileRouter } from "./routes/files";
 
 const app: Express = express();
 
@@ -28,7 +26,7 @@ app.use(rateLimiter);
 app.disable("X-Powered-By");
 app.use(cors());
 app.use(helmet());
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +44,6 @@ app.use(`${apiPrfxEP}/error`, errorRouter);
 app.use(`${apiPrfxEP}/ping`, pingRouter);
 app.use(`${apiPrfxEP}/mail`, mailRouter);
 app.use(`${apiPrfxEP}/parse`, xlsRouter);
-app.use(`${apiPrfxEP}/files`, fileRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   return res.status(404).send("Route Not found!");

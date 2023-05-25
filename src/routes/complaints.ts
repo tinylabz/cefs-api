@@ -49,9 +49,9 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
   }
 });
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", requireAuth, async (req: Request, res: Response) => {
   try {
-    const complaints = await Complaint.find({});
+    const complaints = await Complaint.find({ studentId: req.user?._id });
     return res.status(200).send({ complaints });
   } catch (error) {
     debug(error);
@@ -59,28 +59,41 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", validateObjectID, async (req: Request, res: Response) => {
-  try {
-    const complaint = await Complaint.findById({ _id: req.params.id });
-    return res.status(200).send({ complaint });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
+router.get(
+  "/:id",
+  requireAuth,
+  validateObjectID,
+  async (req: Request, res: Response) => {
+    try {
+      const complaint = await Complaint.findById({ _id: req.params.id });
+      return res.status(200).send({ complaint });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
+    }
   }
-});
+);
 
-router.delete("/:id", validateObjectID, async (req: Request, res: Response) => {
-  try {
-    const complaint = await Complaint.findByIdAndDelete({ _id: req.params.id });
-    return res.status(200).send({ complaint });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
+router.delete(
+  "/:id",
+  requireAuth,
+  validateObjectID,
+  async (req: Request, res: Response) => {
+    try {
+      const complaint = await Complaint.findByIdAndDelete({
+        _id: req.params.id,
+      });
+      return res.status(200).send({ complaint });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
+    }
   }
-});
+);
 
 router.patch(
   "/resolve/:id",
+  requireAuth,
   validateObjectID,
   async (req: Request, res: Response) => {
     try {
@@ -99,7 +112,7 @@ router.patch(
   }
 );
 
-router.delete("/", async (_req: Request, res: Response) => {
+router.delete("/", requireAuth, async (_req: Request, res: Response) => {
   try {
     const complaints = await Complaint.deleteMany({});
     return res.status(200).send({ complaints });

@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { ReqValidationError } from "../errors";
 import { validationResult } from "express-validator";
 
 export const validateRequest = (
@@ -10,7 +9,9 @@ export const validateRequest = (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new ReqValidationError(errors.array());
+    return errors.array()[1].msg
+      ? res.status(400).send(`${errors.array()[1].msg}`)
+      : res.status(400).send("Some Fields are missing!");
   }
 
   next();

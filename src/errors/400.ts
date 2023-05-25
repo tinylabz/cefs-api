@@ -10,12 +10,10 @@ export class BadRequestError extends CustomError {
   }
 }
 
-export class ReqValidationError extends CustomError {
+export class ReqValidationError {
   statusCode = 400;
 
   constructor(private errors: ValidationError[]) {
-    super("Invalid Request Parameters");
-
     Object.setPrototypeOf(this, ReqValidationError.prototype);
   }
 }

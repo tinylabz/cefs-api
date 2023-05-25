@@ -9,15 +9,14 @@ import { DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
-import { sendMail } from "../services/mail";
 
 const router = Router();
 
 router.post(
   "/signin",
   [
-    body("email").isEmail(),
-    body("password").notEmpty().withMessage("You must supply a password"),
+    body("email").isEmail().withMessage("You must provde a valid email!"),
+    body("password").notEmpty().withMessage("You must supply a password!"),
   ],
   validateRequest,
   async (req: Request, res: Response): Promise<Response> => {
@@ -52,42 +51,69 @@ router.post(
   }
 );
 
-router.post("/register", async (req: Request, res: Response): Promise<Response> => {
-  let { name, email, designation, password, college, school } = req.body;
+router.post(
+  "/register",
+  [
+    body("name").isString().notEmpty().withMessage("name is required"),
+    body("email")
+      .isEmail()
+      .notEmpty()
+      .withMessage("You must supply a valid email"),
+    body("designation")
+      .isString()
+      .notEmpty()
+      .withMessage("You must supply a designation"),
+    body("password")
+      .isString()
+      .notEmpty()
+      .withMessage("You must supply a password"),
+    body("college")
+      .isString()
+      .notEmpty()
+      .withMessage("You must supply a college"),
+    body("school")
+      .isString()
+      .notEmpty()
+      .withMessage("You must supply a school"),
+  ],
+  validateRequest,
+  async (req: Request, res: Response): Promise<Response> => {
+    let { name, email, designation, password, college, school } = req.body;
 
-  try {
-    let staff = await Staff.findOne({ email });
+    try {
+      let staff = await Staff.findOne({ email });
 
-    debug({ name, email, designation, password, college, school });
-    if (staff) {
-      const error = new BadRequestError("Email already in use");
-      return res.status(error.statusCode).send(error.message);
+      debug({ name, email, designation, password, college, school });
+      if (staff) {
+        const error = new BadRequestError("Email already in use");
+        return res.status(error.statusCode).send(error.message);
+      }
+
+      staff = await Staff.create({
+        college,
+        name,
+        school,
+        designation,
+        email,
+        password,
+      });
+
+      await staff.save();
+
+      const token = createToken({
+        _id: staff._id,
+        designation: staff.designation as DESIGNATIONS,
+        email: staff.email,
+        name: staff.name,
+      });
+
+      return res.status(201).send({ user: staff, token });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
     }
-
-    staff = await Staff.create({
-      college,
-      name,
-      school,
-      designation,
-      email,
-      password,
-    });
-
-    await staff.save();
-
-    const token = createToken({
-      _id: staff._id,
-      designation: staff.designation as DESIGNATIONS,
-      email: staff.email,
-      name: staff.name,
-    });
-
-    return res.status(201).send({ user: staff, token });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
   }
-});
+);
 
 router.get("/", async (req: Request, res: Response): Promise<Response> => {
   try {

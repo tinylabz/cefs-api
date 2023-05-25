@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import {
-  parser,
+  parseSheet2JSON,
   searchTestsAttendenceSheet,
   searchMarkSheet,
   searchExamAttendenceSheet,
@@ -50,9 +50,9 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
     return res.status(400).send("No file path detected for tests");
 
   try {
-    const markSheet = parser(pathToMarkSheet);
-    const testSheet = parser(pathToTestAttendenceSheet);
-    const examSheet = parser(pathToExamAttendenceSheet);
+    const markSheet = parseSheet2JSON(pathToMarkSheet);
+    const testSheet = parseSheet2JSON(pathToTestAttendenceSheet);
+    const examSheet = parseSheet2JSON(pathToExamAttendenceSheet);
 
     let student = searchTestsAttendenceSheet(testSheet, Number(studentNumber));
     if (!student)
