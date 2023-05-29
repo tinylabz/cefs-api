@@ -18,6 +18,7 @@ import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { reivewsRouter } from "./routes/reviews";
 import { xlsRouter } from "./routes/xls";
+import { chatRouter } from "./routes/chat";
 
 const app: Express = express();
 
@@ -44,6 +45,7 @@ app.use(`${apiPrfxEP}/error`, errorRouter);
 app.use(`${apiPrfxEP}/ping`, pingRouter);
 app.use(`${apiPrfxEP}/mail`, mailRouter);
 app.use(`${apiPrfxEP}/parse`, xlsRouter);
+app.use(`${apiPrfxEP}/chat`, chatRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   return res.status(404).send("Route Not found!");

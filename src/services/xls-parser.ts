@@ -1,10 +1,11 @@
 import { PathLike } from "node:fs";
 import xlsx from "xlsx";
 
-export const parseSheet2JSON = (filePath: PathLike) => {
-  const workbook = xlsx.readFile(filePath as string);
+export const parseSheet2JSON = (path: PathLike) => {
+  const workbook = xlsx.readFile(path as string);
   const sheetName = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheetName];
+
   return xlsx.utils.sheet_to_json(worksheet, { header: 1 });
 };
 

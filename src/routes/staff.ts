@@ -5,7 +5,7 @@ import { Staff } from "../models/Staff";
 import { body } from "express-validator";
 import { validateRequest } from "../middlewares";
 import { createToken } from "../services/token";
-import { DESIGNATIONS } from "../Interfaces";
+import { COLLEGES, DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
@@ -42,6 +42,7 @@ router.post(
         designation: staff.designation as DESIGNATIONS,
         email: staff.email,
         name: staff.name,
+        college: staff.college as COLLEGES,
       });
       return res.status(200).send({ user: staff, token });
     } catch (error) {
@@ -105,6 +106,7 @@ router.post(
         designation: staff.designation as DESIGNATIONS,
         email: staff.email,
         name: staff.name,
+        college: staff.college as COLLEGES,
       });
 
       return res.status(201).send({ user: staff, token });

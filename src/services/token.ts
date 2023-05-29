@@ -9,6 +9,7 @@ export const createToken = (user: UserPayload): string => {
       name: user.name,
       email: user.email,
       designation: user.designation,
+      college: user.college,
     },
     process.env.JWT_KEY as jwt.Secret
   );

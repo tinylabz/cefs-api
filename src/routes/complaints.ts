@@ -2,7 +2,7 @@ import express, { Response, Request } from "express";
 
 import { Complaint } from "../models/Complaint";
 import { debug } from "../utils/debug";
-import { COMPLAINT_STATUSES } from "../Interfaces";
+import { COMPLAINT_STATUSES, DESIGNATIONS } from "../Interfaces";
 import { validateObjectID } from "../middlewares/validate-objectid";
 import { requireAuth } from "../middlewares";
 
@@ -50,8 +50,21 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
 });
 
 router.get("/", requireAuth, async (req: Request, res: Response) => {
+  let complaints;
   try {
-    const complaints = await Complaint.find({ studentId: req.user?._id });
+    if (req.user?.designation === DESIGNATIONS.STUDENT)
+      complaints = await Complaint.find({ studentId: req.user?._id });
+
+    if (req.user?.designation === DESIGNATIONS.LECTURER) {
+      const nameRegex = new RegExp(`\\b${req.user?.name}\\b`, "i");
+      complaints = await Complaint.find({
+        courseLecturer: { $regex: nameRegex },
+      });
+    }
+
+    if (req.user?.designation === DESIGNATIONS.HOD)
+      complaints = await Complaint.find({});
+
     return res.status(200).send({ complaints });
   } catch (error) {
     debug(error);

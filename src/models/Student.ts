@@ -1,5 +1,5 @@
 import { getModelForClass, pre, prop, Severity } from "@typegoose/typegoose";
-import { DESIGNATIONS } from "../Interfaces";
+import { COLLEGES, DESIGNATIONS } from "../Interfaces";
 import { Passwd } from "../services/password";
 
 @pre<StudentSchema>("save", async function (next) {
@@ -36,7 +36,7 @@ export class StudentSchema {
     type: String,
     trim: true,
     uppercase: true,
-    length: 50,
+    enum: COLLEGES,
   })
   college!: string;
 

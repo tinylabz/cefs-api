@@ -3,7 +3,7 @@ import { Request, Response, Router } from "express";
 import { BadRequestError, NotFoundError } from "../errors";
 import { Student } from "../models/Student";
 import { createToken } from "../services/token";
-import { DESIGNATIONS } from "../Interfaces";
+import { COLLEGES, DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
 import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
@@ -47,6 +47,7 @@ router.post(
         designation: DESIGNATIONS.STUDENT,
         email: user.email,
         name: user.name,
+        college: user.college as COLLEGES,
       });
       debug(token);
       debug(user);
@@ -114,6 +115,7 @@ router.post(
         designation: user.designation as DESIGNATIONS,
         email: user.email,
         name: user.name,
+        college: user.college as COLLEGES,
       });
       debug("TOKEN: ", token);
 

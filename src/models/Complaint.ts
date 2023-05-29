@@ -10,7 +10,7 @@ export class ComplaintSchema {
   @prop({ required: true, type: String, trim: true, length: 15 })
   registrationNumber!: string;
 
-  @prop({ required: false, type: String, trim: true, length: 50 })
+  @prop({ required: false, index: true, type: String, trim: true, length: 50 })
   courseLecturer!: string;
 
   @prop({

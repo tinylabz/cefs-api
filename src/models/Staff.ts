@@ -1,5 +1,5 @@
 import { getModelForClass, pre, prop, Severity } from "@typegoose/typegoose";
-import { DESIGNATIONS } from "../Interfaces";
+import { COLLEGES, DESIGNATIONS, SCHOOLS } from "../Interfaces";
 import { Passwd } from "../services/password";
 
 @pre<StaffSchema>("save", async function (next) {
@@ -25,10 +25,10 @@ export class StaffSchema {
   @prop({ required: false, default: false, type: Boolean })
   isEmailVerified!: boolean;
 
-  @prop({ required: true, type: String, trim: true, length: 50 })
+  @prop({ required: true, type: String, trim: true, enum: COLLEGES })
   college!: string;
 
-  @prop({ required: true, type: String, trim: true, length: 50 })
+  @prop({ required: true, type: String, trim: true, enum: SCHOOLS })
   school!: string;
 
   @prop({

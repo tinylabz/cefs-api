@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { debug } from "../utils/debug";
 
 const bcc = ",,";
 const cc = ",,";
@@ -31,7 +32,7 @@ export const sendMail = async (
     attachments,
   });
 
-  console.log("Message sent: %s", info.messageId);
+  debug("Message sent: %s", info.messageId);
 
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  debug("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 };
