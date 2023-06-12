@@ -3,7 +3,7 @@ import { Request, Response, Router } from "express";
 import { BadRequestError, InternalServerError, NotFoundError } from "../errors";
 import { Staff } from "../models/Staff";
 import { body } from "express-validator";
-import { validateRequest } from "../middlewares";
+import { requireAuth, validateRequest } from "../middlewares";
 import { createToken } from "../services/token";
 import { COLLEGES, DESIGNATIONS } from "../Interfaces";
 import { debug } from "../utils/debug";
@@ -44,7 +44,7 @@ router.post(
         name: staff.name,
         college: staff.college as COLLEGES,
       });
-      return res.status(200).send({ user: staff, token });
+      return res.send({ user: staff, token });
     } catch (error) {
       const err = new InternalServerError((error as Error).message);
       return res.status(err.statusCode).send(err.message);
@@ -117,22 +117,27 @@ router.post(
   }
 );
 
-router.get("/", async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const staffs = await Staff.find({});
-    if (staffs.length < 1) {
-      const err = new NotFoundError("No staffs found!");
-      return res.status(err.statusCode).send(err.message);
+router.get(
+  "/",
+  requireAuth,
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const staffs = await Staff.find({});
+      if (staffs.length < 1) {
+        const err = new NotFoundError("No staffs found!");
+        return res.status(err.statusCode).send(err.message);
+      }
+      return res.send({ staffs });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
     }
-    return res.status(200).send({ staffs });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
   }
-});
+);
 
 router.get(
   "/:id",
+  requireAuth,
   validateObjectID,
   async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -141,7 +146,7 @@ router.get(
         const err = new NotFoundError("No such staff found!");
         return res.status(err.statusCode).send(err.message);
       }
-      return res.status(200).send(staff);
+      return res.send(staff);
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -149,14 +154,18 @@ router.get(
   }
 );
 
-router.delete("/", async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const deleted = await Staff.deleteMany({});
-    return res.status(200).send({ deleted });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
+router.delete(
+  "/",
+  requireAuth,
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const deleted = await Staff.deleteMany({});
+      return res.send({ deleted });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
+    }
   }
-});
+);
 
 export { router as staffRouter };

@@ -18,11 +18,11 @@ import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
 import { reivewsRouter } from "./routes/reviews";
 import { xlsRouter } from "./routes/xls";
-import { chatRouter } from "./routes/chat";
+import { reportRouter } from "./routes/report";
 
 const app: Express = express();
 
-const apiPrfxEP = "/api";
+const prefix = "/api";
 app.use(rateLimiter);
 app.disable("X-Powered-By");
 app.use(cors());
@@ -32,20 +32,20 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(`${apiPrfxEP}/change-password`, passwordChangeRouter);
-app.use(`${apiPrfxEP}/verify-email`, verifyEmailRouter);
-app.use(`${apiPrfxEP}/complaints`, complaintsRouter);
-app.use(`${apiPrfxEP}/reviews`, reivewsRouter);
-app.use(`${apiPrfxEP}/students/`, studentRouter);
-app.use(`${apiPrfxEP}/signout`, signoutRouter);
-app.use(`${apiPrfxEP}/me`, currentUserRouter);
-app.use(`${apiPrfxEP}/upload`, uploadRouter);
-app.use(`${apiPrfxEP}/staff/`, staffRouter);
-app.use(`${apiPrfxEP}/error`, errorRouter);
-app.use(`${apiPrfxEP}/ping`, pingRouter);
-app.use(`${apiPrfxEP}/mail`, mailRouter);
-app.use(`${apiPrfxEP}/parse`, xlsRouter);
-app.use(`${apiPrfxEP}/chat`, chatRouter);
+app.use(`${prefix}/change-password`, passwordChangeRouter);
+app.use(`${prefix}/verify-email`, verifyEmailRouter);
+app.use(`${prefix}/complaints`, complaintsRouter);
+app.use(`${prefix}/reviews`, reivewsRouter);
+app.use(`${prefix}/students/`, studentRouter);
+app.use(`${prefix}/signout`, signoutRouter);
+app.use(`${prefix}/me`, currentUserRouter);
+app.use(`${prefix}/report`, reportRouter);
+app.use(`${prefix}/upload`, uploadRouter);
+app.use(`${prefix}/staff/`, staffRouter);
+app.use(`${prefix}/error`, errorRouter);
+app.use(`${prefix}/ping`, pingRouter);
+app.use(`${prefix}/mail`, mailRouter);
+app.use(`${prefix}/parse`, xlsRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   return res.status(404).send("Route Not found!");

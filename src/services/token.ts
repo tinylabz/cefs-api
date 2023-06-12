@@ -14,4 +14,3 @@ export const createToken = (user: UserPayload): string => {
     process.env.JWT_KEY as jwt.Secret
   );
 };
-export default { createToken };

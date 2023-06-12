@@ -22,7 +22,7 @@ router.patch("/", requireAuth, async (req: Request, res: Response) => {
     // @ts-ignore
     user = await user?.save();
     debug(user?.password);
-    return res.status(200).send("Password changed");
+    return res.send("Password changed");
   } catch (error) {
     return res.status(500).send((error as Error).message);
   }

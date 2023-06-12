@@ -3,7 +3,7 @@ import { Request, Response, Router } from "express";
 import { requireAuth } from "../middlewares";
 
 const router = Router().get("/", async (req: Request, res: Response) => {
-  return res.status(200).send({ file: req.file, text: req.body });
+  return res.send({ file: req.file, text: req.body });
 });
 
 router.post(
@@ -13,12 +13,12 @@ router.post(
     storage: multer.diskStorage({
       destination: (_req, _file, callback) => callback(null, `public/marks`),
       filename: (req, file, callback) => {
-        callback(null, `${req.user?._id}-${file.originalname}`);
+        callback(null, file.originalname);
       },
     }),
   }).single("file"),
   (req, res, _next) => {
-    return res.status(200).send({ file: req.file, text: req.body });
+    return res.send({ file: req.file, text: req.body });
   }
 );
 
@@ -34,7 +34,7 @@ router.post(
     }),
   }).single("file"),
   (req, res, _next) => {
-    return res.status(200).send({ file: req.file, text: req.body });
+    return res.send({ file: req.file, text: req.body });
   }
 );
 
@@ -46,12 +46,12 @@ router.post(
       destination: (_req, _file, callback) =>
         callback(null, `public/attendence/test`),
       filename: (req, file, callback) => {
-        callback(null, `${req.user?._id}-${file.originalname}`);
+        callback(null, file.originalname);
       },
     }),
   }).single("file"),
   (req, res, _next) => {
-    return res.status(200).send({ file: req.file, text: req.body });
+    return res.send({ file: req.file, text: req.body });
   }
 );
 
@@ -63,12 +63,12 @@ router.post(
       destination: (_req, _file, callback) =>
         callback(null, `public/attendence/exam`),
       filename: (req, file, callback) => {
-        callback(null, `${req.user?._id}-${file.originalname}`);
+        callback(null, file.originalname);
       },
     }),
   }).single("file"),
   (req, res, _next) => {
-    return res.status(200).send({ file: req.file, text: req.body });
+    return res.send({ file: req.file, text: req.body });
   }
 );
 

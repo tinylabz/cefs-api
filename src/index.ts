@@ -14,7 +14,7 @@ const start = async (): Promise<void | never> => {
   }
 
   mongoose
-    .connect(__PROD__ ? process.env.MONGO_URI : "mongodb://127.0.0.1:27017/cef")
+    .connect(__PROD__ ? process.env.MONGO_URI : "mongodb://127.0.0.1:27017/db1")
     .then(({ connection: { name } }) => debug("Connected to Database: ", name))
     .catch((err) => {
       debug((err as Error).message);

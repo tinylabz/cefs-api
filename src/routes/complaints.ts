@@ -41,7 +41,7 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
       studentId: req.user?._id,
     });
     await complaint.save();
-    return res.status(200).send({ complaint });
+    return res.send({ complaint });
   } catch (error) {
     debug(error);
 
@@ -51,6 +51,8 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
 
 router.get("/", requireAuth, async (req: Request, res: Response) => {
   let complaints;
+
+  debug("DESIGNATION: ", req.user?.designation);
   try {
     if (req.user?.designation === DESIGNATIONS.STUDENT)
       complaints = await Complaint.find({ studentId: req.user?._id });
@@ -58,14 +60,22 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
     if (req.user?.designation === DESIGNATIONS.LECTURER) {
       const nameRegex = new RegExp(`\\b${req.user?.name}\\b`, "i");
       complaints = await Complaint.find({
-        courseLecturer: { $regex: nameRegex },
+        courseLecturer: req.user.name,
       });
     }
 
     if (req.user?.designation === DESIGNATIONS.HOD)
       complaints = await Complaint.find({});
 
-    return res.status(200).send({ complaints });
+    if (req.user?.designation === DESIGNATIONS.REGISTRAR) {
+      complaints = await Complaint?.find({});
+
+      complaints = [...complaints].filter(
+        (c) => Number(c.registrationNumber.split("/")[0]) <= 17
+      );
+    }
+
+    return res.send({ complaints });
   } catch (error) {
     debug(error);
     return res.status(500).send((error as Error).message);
@@ -79,7 +89,7 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const complaint = await Complaint.findById({ _id: req.params.id });
-      return res.status(200).send({ complaint });
+      return res.send({ complaint });
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -96,7 +106,7 @@ router.delete(
       const complaint = await Complaint.findByIdAndDelete({
         _id: req.params.id,
       });
-      return res.status(200).send({ complaint });
+      return res.send({ complaint });
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -117,7 +127,7 @@ router.patch(
         },
         { new: false }
       );
-      return res.status(200).send({ complaint });
+      return res.send({ complaint });
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -128,7 +138,7 @@ router.patch(
 router.delete("/", requireAuth, async (_req: Request, res: Response) => {
   try {
     const complaints = await Complaint.deleteMany({});
-    return res.status(200).send({ complaints });
+    return res.send({ complaints });
   } catch (error) {
     debug(error);
     return res.status(500).send((error as Error).message);

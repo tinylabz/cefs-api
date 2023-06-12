@@ -27,7 +27,7 @@ const router = Router().get(
 
     debug("ME: ", JSON.stringify(me));
 
-    return res.status(200).send({ me });
+    return res.send({ me });
   }
 );
 

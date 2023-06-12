@@ -5,7 +5,7 @@ const router = Router().get("/", async (req: Request, res: Response) => {
   try {
     throw new InternalServerError("Intended Exception");
   } catch (error: unknown) {
-    res.status(500).send((error as Error).message);
+    res.status(500).send({ error: (error as Error).message });
   }
 });
 

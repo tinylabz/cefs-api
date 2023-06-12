@@ -8,7 +8,7 @@ import { debug } from "../utils/debug";
 import { Passwd } from "../services/password";
 import { validateObjectID } from "../middlewares/validate-objectid";
 import { body } from "express-validator";
-import { validateRequest } from "../middlewares";
+import { requireAuth, validateRequest } from "../middlewares";
 
 const router = Router();
 
@@ -52,7 +52,7 @@ router.post(
       debug(token);
       debug(user);
 
-      return res.status(200).send({ user, token });
+      return res.send({ user, token });
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -128,22 +128,27 @@ router.post(
   }
 );
 
-router.get("/", async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const students = await Student.find({});
-    if (students.length < 1) {
-      const err = new NotFoundError("No students found!");
-      return res.status(err.statusCode).send(err.message);
+router.get(
+  "/",
+  requireAuth,
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const students = await Student.find({});
+      if (students.length < 1) {
+        const err = new NotFoundError("No students found!");
+        return res.status(err.statusCode).send(err.message);
+      }
+      return res.send({ students });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
     }
-    return res.status(200).send({ students });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
   }
-});
+);
 
 router.get(
   "/:id",
+  requireAuth,
   validateObjectID,
   async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -152,7 +157,7 @@ router.get(
         const err = new NotFoundError("No such student found!");
         return res.status(err.statusCode).send(err.message);
       }
-      return res.status(200).send(student);
+      return res.send(student);
     } catch (error) {
       debug(error);
       return res.status(500).send((error as Error).message);
@@ -160,14 +165,18 @@ router.get(
   }
 );
 
-router.delete("/", async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const deleted = await Student.deleteMany({});
-    return res.status(200).send({ deleted });
-  } catch (error) {
-    debug(error);
-    return res.status(500).send((error as Error).message);
+router.delete(
+  "/",
+  requireAuth,
+  async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const deleted = await Student.deleteMany({});
+      return res.send({ deleted });
+    } catch (error) {
+      debug(error);
+      return res.status(500).send((error as Error).message);
+    }
   }
-});
+);
 
 export { router as studentRouter };

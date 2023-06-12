@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   try {
     const reviews = await Review.find({});
-    return res.status(200).send({ reviews });
+    return res.send({ reviews });
   } catch (error) {
     return res.status(500).send((error as Error).message);
   }
@@ -33,7 +33,7 @@ router.post(
         value,
         user,
       });
-      return res.status(200).send({ review });
+      return res.send({ review });
     } catch (error) {
       return res.status(500).send((error as Error).message);
     }
