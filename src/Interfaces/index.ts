@@ -81,3 +81,9 @@ export type UserPayload = {
   designation: DESIGNATIONS;
   college: COLLEGES;
 };
+
+export enum RESPONSES {
+  NO_TEST_ATTENDENCE = "This student may not have attended the test for the specified course unit",
+  NO_EXAM_ATTENDENCE = "This student may not have attended the exam for the specified course unit",
+  NO_RESULTS = "No results for student in the specified course unit. This mean that the student never sat for any of the C/W, tests or final exam",
+}

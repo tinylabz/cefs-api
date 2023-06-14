@@ -17,7 +17,7 @@ type Result =
     }
   | null
   | undefined;
-type Sheet = unknown[];
+export type Sheet = unknown[];
 type Row = [number, string, number, string, number, number, number] | undefined;
 
 export const searchMarkSheet = (

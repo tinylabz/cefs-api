@@ -125,7 +125,7 @@ router.patch(
         {
           status: COMPLAINT_STATUSES.RESOLVED,
         },
-        { new: false }
+        { new: true }
       );
       return res.send({ complaint });
     } catch (error) {
