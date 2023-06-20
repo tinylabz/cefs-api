@@ -5,20 +5,21 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { errorHandler, limiter as rateLimiter } from "./middlewares";
-import { signoutRouter } from "./routes/auth/signout";
-import { currentUserRouter } from "./routes/auth/me";
-import { complaintsRouter } from "./routes/complaints";
-import { pingRouter } from "./routes/ping";
-import { errorRouter } from "./routes/500";
-import { uploadRouter } from "./routes/upload";
-import { staffRouter } from "./routes/staff";
-import { studentRouter } from "./routes/student";
-import { mailRouter } from "./routes/mail";
 import { passwordChangeRouter } from "./routes/auth/password";
 import { verifyEmailRouter } from "./routes/auth/verify-email";
+import { complaintsRouter } from "./routes/complaints";
+import { signoutRouter } from "./routes/auth/signout";
+import { currentUserRouter } from "./routes/auth/me";
+import { studentRouter } from "./routes/student";
 import { reivewsRouter } from "./routes/reviews";
-import { xlsRouter } from "./routes/xls";
 import { reportRouter } from "./routes/report";
+import { uploadRouter } from "./routes/upload";
+import { staffRouter } from "./routes/staff";
+import { pingRouter } from "./routes/ping";
+import { chatRouter } from "./routes/chat";
+import { errorRouter } from "./routes/500";
+import { mailRouter } from "./routes/mail";
+import { xlsRouter } from "./routes/xls";
 
 const app: Express = express();
 
@@ -46,6 +47,7 @@ app.use(`${prefix}/error`, errorRouter);
 app.use(`${prefix}/ping`, pingRouter);
 app.use(`${prefix}/mail`, mailRouter);
 app.use(`${prefix}/parse`, xlsRouter);
+app.use(`${prefix}/chat`, chatRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   return res.status(404).send("Route Not found!");

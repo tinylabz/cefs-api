@@ -2,7 +2,7 @@ import express, { Response, Request } from "express";
 
 import { Complaint } from "../models/Complaint";
 import { debug } from "../utils/debug";
-import { COMPLAINT_STATUSES, DESIGNATIONS } from "../Interfaces";
+import { COMPLAINT_STATUSES, DESIGNATIONS, NATURE } from "../Interfaces";
 import { validateObjectID } from "../middlewares/validate-objectid";
 import { requireAuth } from "../middlewares";
 
@@ -50,32 +50,39 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
 });
 
 router.get("/", requireAuth, async (req: Request, res: Response) => {
-  let complaints;
-
   debug("DESIGNATION: ", req.user?.designation);
   try {
-    if (req.user?.designation === DESIGNATIONS.STUDENT)
-      complaints = await Complaint.find({ studentId: req.user?._id });
-
-    if (req.user?.designation === DESIGNATIONS.LECTURER) {
-      const nameRegex = new RegExp(`\\b${req.user?.name}\\b`, "i");
-      complaints = await Complaint.find({
-        courseLecturer: req.user.name,
-      });
+    if (req.user?.designation === DESIGNATIONS.STUDENT) {
+      const complaints = await Complaint.find({ studentId: req.user?._id });
+      return res.send(complaints);
     }
 
-    if (req.user?.designation === DESIGNATIONS.HOD)
-      complaints = await Complaint.find({});
+    if (req.user?.designation === DESIGNATIONS.LECTURER) {
+      let complaints = await Complaint.find({
+        courseLecturer: req.user.name,
+      });
+
+      complaints = complaints.filter((c) => c.nature !== NATURE.REMARK);
+
+      return res.send(complaints);
+    }
+
+    if (req.user?.designation === DESIGNATIONS.HOD) {
+      const complaints = await Complaint.find({});
+      return res.send(complaints);
+    }
 
     if (req.user?.designation === DESIGNATIONS.REGISTRAR) {
-      complaints = await Complaint?.find({});
+      let complaints = await Complaint?.find({});
 
       complaints = [...complaints].filter(
         (c) => Number(c.registrationNumber.split("/")[0]) <= 17
       );
+
+      return res.send(complaints);
     }
 
-    return res.send({ complaints });
+    return res.send(null);
   } catch (error) {
     debug(error);
     return res.status(500).send((error as Error).message);
