@@ -11,5 +11,5 @@ const ONE_MINUTE = 1 * 60 * 1000;
  */
 export const limiter: RateLimitRequestHandler = rateLimit({
   windowMs: ONE_MINUTE,
-  max: __PROD__ ? 10 : Number.MAX_SAFE_INTEGER,
+  max: __PROD__ ? 60 : Number.MAX_SAFE_INTEGER,
 });
