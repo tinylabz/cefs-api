@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "tsc",
     "build": "tsc",
-    "start": "ts-node ./src/index.ts",
+    "start": "export debug=http && ts-node ./src/index.ts",
     "ts": "tsc -w",
     "dev": "ts-node-dev ./src/index.ts",
     "test": "jest --config ./jest.config.ts"
