@@ -5,6 +5,8 @@ import { debug } from "../utils/debug";
 import { COMPLAINT_STATUSES, DESIGNATIONS, NATURE } from "../Interfaces";
 import { validateObjectID } from "../middlewares/validate-objectid";
 import { requireAuth } from "../middlewares";
+import { sendMail } from "../services/mail";
+import { Student } from "../models/Student";
 
 const router = express.Router();
 
@@ -126,6 +128,8 @@ router.patch(
   requireAuth,
   validateObjectID,
   async (req: Request, res: Response) => {
+    const { feedback } = req.body;
+
     try {
       const complaint = await Complaint.findByIdAndUpdate(
         req.params.id,
@@ -134,6 +138,24 @@ router.patch(
         },
         { new: true }
       );
+
+      const student = await Student.findById(complaint?.studentId);
+
+      const html = `<p style="text-align: center;"> ${feedback}</p>`;
+
+      sendMail(
+        `${student?.email},'',''`,
+        html,
+        "Feedback from Lecturer ",
+        "Comment regarding your submitted complaint"
+      )
+        .then(() => {
+          return res.send(`Verification Email Sent to ${req.user?.email}`);
+        })
+        .catch((err) => {
+          debug("ERROR: ", err);
+          return res.status(500).send((err as Error).message);
+        });
       return res.send({ complaint });
     } catch (error) {
       debug(error);
