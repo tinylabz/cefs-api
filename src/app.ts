@@ -16,7 +16,6 @@ import { reportRouter } from "./routes/report";
 import { uploadRouter } from "./routes/upload";
 import { staffRouter } from "./routes/staff";
 import { pingRouter } from "./routes/ping";
-import { chatRouter } from "./routes/chat";
 import { errorRouter } from "./routes/500";
 import { mailRouter } from "./routes/mail";
 import { xlsRouter } from "./routes/xls";
@@ -47,7 +46,6 @@ app.use(`${prefix}/error`, errorRouter);
 app.use(`${prefix}/ping`, pingRouter);
 app.use(`${prefix}/mail`, mailRouter);
 app.use(`${prefix}/parse`, xlsRouter);
-app.use(`${prefix}/chat`, chatRouter);
 
 app.all("*", async (_req: Request, res: Response) => {
   return res.status(404).send("Route Not found!");

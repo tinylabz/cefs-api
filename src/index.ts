@@ -2,6 +2,7 @@ import { app } from "./app";
 import mongoose from "mongoose";
 import { __PROD__ } from "./config/__prod__";
 import { debug } from "./utils/debug";
+import axios from "axios";
 
 const start = async (): Promise<void | never> => {
   if (!process.env.JWT_KEY) {
@@ -36,6 +37,19 @@ process.on("uncaughtExceptionMonitor", (err) => {
 process.on("SIGINT", () => {
   debug("Shutting down");
 });
+
+function makeRequest() {
+  axios
+    .get("https://dont-go-to-bed.onrender.com/ping")
+    .then((response) => {
+      console.log("Response:", response.data);
+    })
+    .catch((error) => {
+      console.error("Error:", error.message);
+    });
+}
+
+setInterval(makeRequest, 60000);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => debug(`Server running on port: ${PORT}`));
