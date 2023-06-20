@@ -12,6 +12,9 @@
     "dev": "ts-node-dev ./src/index.ts",
     "test": "jest --config ./jest.config.ts"
   },
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "debug": "^4.3.4",
