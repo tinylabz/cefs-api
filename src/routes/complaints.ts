@@ -83,8 +83,6 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
 
       return res.send(complaints);
     }
-
-    return res.send(null);
   } catch (error) {
     debug(error);
     return res.status(500).send((error as Error).message);
@@ -141,13 +139,13 @@ router.patch(
 
       const student = await Student.findById(complaint?.studentId);
 
-      const html = `<p style="text-align: center;"> ${feedback}</p>`;
+      const html = `<h2>${feedback}</h2>`;
 
       sendMail(
         `${student?.email},'',''`,
         html,
-        "Feedback from Lecturer ",
-        "Comment regarding your submitted complaint"
+        `Feedback from ${req.user?.designation} ${req.user?.name} regarding your submitted complaint for ${complaint?.nature}`,
+        "Comment "
       )
         .then(() => {
           return res.send(`Verification Email Sent to ${req.user?.email}`);

@@ -85,6 +85,20 @@ export class ComplaintSchema {
     ref: Student, // Reference the Student model or document
   })
   studentId!: string;
+
+  @prop({
+    required: true,
+    type: mongoose.Schema.Types.Date,
+    default: Date.now,
+  })
+  createdAt!: Date;
+
+  @prop({
+    required: true,
+    type: mongoose.Schema.Types.Date,
+    default: Date.now,
+  })
+  updatedAt!: Date;
 }
 
 export const Complaint = getModelForClass(ComplaintSchema, {
