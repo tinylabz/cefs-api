@@ -11,7 +11,7 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
     req.user?.designation === DESIGNATIONS.STUDENT ? "students" : "staff";
 
   const html = `<a
-      href="http://localhost:4000/api/verify-email/${entity}/${req.user?._id}"
+      href="https://cefs.onrender.com/api/verify-email/${entity}/${req.user?._id}"
       style="text-decoration: none;"
     >
       <button style="display: inline-block; cursor: pointer; font-size: 16px; font-weight: bold; text-align: center; text-decoration: none; border-radius: 4px; padding: 10px 20px; border: none; background-color: #4CAF50; color: white;">

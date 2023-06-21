@@ -7,7 +7,7 @@ import { validateObjectID } from "../../middlewares";
 
 const router = Router();
 
-const buttonHTML = `<a href="http://localhost:3000" class="centered-button">Email verified, click this button to continue</a>`;
+const buttonHTML = `<a href="https://cefs.vercel.app" class="centered-button">Email verified, click this button to continue</a>`;
 const htmlResponse = `
     <html>
       <head>
