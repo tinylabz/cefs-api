@@ -11,7 +11,6 @@ router.get("/", requireAuth, async (_: Request, res: Response) => {
   const doc = new PDFDocument();
 
   const complaints = await Complaint.find({});
-  const students = await Student.find({});
 
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", 'attachment; filename="report.pdf"');
@@ -35,11 +34,6 @@ router.get("/", requireAuth, async (_: Request, res: Response) => {
   ];
 
   complaints.forEach((complaint) => {
-    const student = students.find(
-      (student) => student._id.toString() === complaint.studentId.toString()
-    );
-    const studentName = student?.name!;
-
     const parts = complaint.createdAt.toString().split(" ");
     const date = `${parts[2]}/${parts[1]}/${parts[3]}`;
 

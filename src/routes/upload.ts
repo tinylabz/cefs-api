@@ -29,7 +29,10 @@ router.post(
     storage: multer.diskStorage({
       destination: (_req, _file, callback) => callback(null, `public/reciepts`),
       filename: (req, file, callback) => {
-        callback(null, `${req.user?._id}-${file.originalname}`);
+        callback(
+          null,
+          `${req.user?._id}-${file.originalname.split(" ").join("-")}`
+        );
       },
     }),
   }).single("file"),
