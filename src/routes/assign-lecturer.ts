@@ -14,6 +14,9 @@ router.post(
   requireAuth,
   validateObjectID,
   async (req: Request, res: Response) => {
+    if (req.user?.designation !== DESIGNATIONS.HOD)
+      return res.status(403).send("Only lecturer can assign remark lecturers!");
+
     const { lecturerName, studentId } = req.body;
 
     const complaint = await Complaint.findById(req.params.id);
@@ -54,7 +57,7 @@ router.post(
         return res.status(500).send((err as Error).message);
       });
 
-    res.send("Lecturer successfully assigned");
+    return res.send("Lecturer successfully assigned");
   }
 );
 
