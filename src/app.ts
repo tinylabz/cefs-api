@@ -19,6 +19,7 @@ import { pingRouter } from "./routes/ping";
 import { errorRouter } from "./routes/500";
 import { mailRouter } from "./routes/mail";
 import { xlsRouter } from "./routes/xls";
+import { assignLecturerToRemarkRouter } from "./routes/assign-lecturer";
 
 const app: Express = express();
 
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+app.use(`${prefix}/assign-lecturer`, assignLecturerToRemarkRouter);
 app.use(`${prefix}/change-password`, passwordChangeRouter);
 app.use(`${prefix}/verify-email`, verifyEmailRouter);
 app.use(`${prefix}/complaints`, complaintsRouter);

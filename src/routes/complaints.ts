@@ -27,6 +27,20 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
   } = req.body;
 
   try {
+    // Check if the same complaint already exists for the student, course code, and nature
+    const existingComplaint = await Complaint.findOne({
+      studentId: req.user?._id,
+      courseCode,
+      nature,
+    });
+
+    if (existingComplaint) {
+      return res
+        .status(400)
+        .send(
+          `You have already submitted a complaint for this course code ${courseCode} of nature ${nature}.`
+        );
+    }
     const complaint = await Complaint.create({
       academicYearOfSitting,
       recieptURL,
