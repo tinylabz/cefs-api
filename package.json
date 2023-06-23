@@ -1,12 +1,7 @@
 {
   "displayName": "cefs server",
-  "authors": [
-    "ianbalijawa"
-  ],
   "license": "ISC",
   "scripts": {
-    "postinstall": "tsc",
-    "build": "tsc",
     "start": "export debug=http && ts-node ./src/index.ts",
     "ts": "tsc -w",
     "dev": "ts-node-dev ./src/index.ts",
