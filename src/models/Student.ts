@@ -28,7 +28,14 @@ export class StudentSchema {
   @prop({ required: true, type: String, unique: true, trim: true, length: 10 })
   studentNumber!: string;
 
-  @prop({ required: true, type: String, unique: true, trim: true, length: 15 })
+  @prop({
+    required: true,
+    type: String,
+    unique: true,
+    trim: true,
+    length: 15,
+    uppercase: true,
+  })
   registrationNumber!: string;
 
   @prop({
