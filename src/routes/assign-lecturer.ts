@@ -43,7 +43,7 @@ router.post(
     await assignedComplaint.save();
 
     const htmlForLecturer = `<h2>You have been assigned to handle the remark course unit ${complaint.courseCode}. <br/>This was under the lecturer ${lecturerName} for student ${student.name} of Student No. ${student.studentNumber}</h2>`;
-    const htmlForStudent = `<h2>Your complaint of nature ${complaint.nature} for coursecode ${complaint.courseCode} <br/> has been assigned the lecturer ${lecturer.name} ot handle it. You'll be notified when it's done, thank you.</h2>`;
+    const htmlForStudent = `<h2>Your complaint of nature ${complaint.nature} for coursecode ${complaint.courseCode} <br/> has been assigned the lecturer ${lecturer.name} to handle it. You'll be notified when it's done, thank you.</h2>`;
 
     sendMail(
       `${lecturer.email},'',''`,
