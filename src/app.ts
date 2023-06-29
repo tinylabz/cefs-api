@@ -28,7 +28,7 @@ app.use(rateLimiter);
 app.disable("X-Powered-By");
 app.use(cors());
 app.use(helmet());
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
