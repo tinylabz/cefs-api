@@ -1,6 +1,7 @@
 import { getModelForClass, prop, Severity } from "@typegoose/typegoose";
 import mongoose from "mongoose";
 import { Complaint } from "./Complaint";
+import { Student } from "./Student";
 
 export class AssignComplaintSchema {
   @prop({ required: false, index: true, type: String, trim: true, length: 50 })
@@ -9,9 +10,16 @@ export class AssignComplaintSchema {
   @prop({
     required: true,
     type: mongoose.Types.ObjectId,
-    ref: Complaint,
+    ref: Student,
   })
   studentId!: string;
+
+  @prop({
+    required: true,
+    type: mongoose.Types.ObjectId,
+    ref: Complaint,
+  })
+  complaintId!: string;
 
   @prop({
     required: true,

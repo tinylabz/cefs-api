@@ -38,6 +38,7 @@ router.post(
     const assignedComplaint = await AssignComplaint.create({
       lecturerAssigned: lecturerName,
       studentId,
+      complaintId: complaint._id,
     });
 
     await assignedComplaint.save();
