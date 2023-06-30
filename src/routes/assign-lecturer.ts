@@ -27,7 +27,6 @@ router.post(
 
     const lecturer = await Staff.findOne({
       name: lecturerName,
-      designation: DESIGNATIONS.LECTURER,
     });
 
     if (!lecturer)
